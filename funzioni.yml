@@ -1,0 +1,363 @@
+// costruttore
+            LCDMenuLib2 (LCDMenuLib2_menu & p_r, const  uint8_t p_rows, const  uint8_t p_cols, LCDML_FuncPtr contentUpdate, LCDML_FuncPtr contentClear, LCDML_FuncPtr menuControl);
+
+            // metodo init
+            void  init ( void );                                            // inizializzazione del menu / ripristino del menu completo
+
+            // metodi di loop
+            void  loop ( void );                                            // chiama il loop_menu e la funzione loop_control
+            void  loop_control ( void );                                    // chiama la funzione callback per controllare il menu
+            void  loop_menu ( void );                                       // controlla se sono necessari un pulsante o una funzione di menu e li chiama
+
+            // metodi di menu            
+            void     MENU_display ( uint8_t update = 0 );                   // aggiorna la struttura del menu corrente ma non la visualizza
+            void     MENU_goRoot ( void );                                  // imposta il cursore sull'elemento radice
+            void     MENU_enRollover ( void );                              // abilita il rollover del menu (primo all'ultimo o ultimo al primo elemento di un livello)
+            void     MENU_disRollover ( void );                             // disabilita la funzione di rollover del menu
+            void     MENU_enScroll ( void );                                // abilita la funzione scroll (questa funzione può essere disabilitata su elementi di contenuto dyn e quando viene utilizzato un encoder)
+            void     MENU_disScroll ( void );                               // disabilita la funzione scroll per catturare il cursore su un elemento dyn content quando viene utilizzato un encoder
+            void     MENU_setDynContent ( void );                           // imposta questo valore quando il contenuto di dyn viene mostrato nelle finestre correnti del display                          
+            uint8_t  MENU_checkDynContent ( void );                         // controlla se il contenuto di dyn è visualizzato
+            booleano MENU_getScrollDisableStatus ( void );                  // controlla se la funzione scroll è disabilitata
+            uint8_t  MENU_getLayer ( void );                                // ottiene il livello corrente del menu
+            uint8_t  MENU_getCursorPos ( void );                            // ottiene la posizione corrente del cursore (riga 0, riga 1, riga 2, ...)
+            uint8_t  MENU_getCursorPosAbs ( void );                         // ottiene la posizione attuale del cursore assoluta (..., riga 10, riga 11, ..) in base alla struttura del menu
+            uint8_t  MENU_getChilds ( void );                               // ottiene il numero corrente di child su questo layer
+            uint8_t  MENU_getParentID ( uint8_t p_layer = 0 );              // ottiene l'id genitore di un livello superiore selezionato
+            uint8_t  MENU_getScroll ( void );                               // ottiene il valore di scorrimento corrente
+            
+            LCDMenuLib2_menu * MENU_getDisplayedObj ();                     // ottenere l'obiezione con il contenuto attuale da visualizzare                    
+            LCDMenuLib2_menu * MENU_getCurrentObj ();                       // ottiene l'oggetto figlio corrente
+
+            // BT = metodi dei pulsanti
+            booleano BT_setup ( void );                                     // controlla se l'inizializzazione del pulsante è stata eseguita
+            void     BT_enter ( void );                                     // imposta il pulsante enter
+            void     BT_up ( void );                                        // imposta un pulsante
+            void     BT_down ( void );                                      // imposta il pulsante in basso
+            void     BT_left ( void );                                      // imposta il pulsante a sinistra
+            void     BT_right ( void );                                     // imposta il pulsante a destra
+            void     BT_quit ( void );                                      // imposta il pulsante esci
+
+            void     BT_resetAll ( void );                                  // ripristina tutti gli stati dei pulsanti
+            void     BT_resetEnter ( void );                                // ripristina lo stato del pulsante di invio
+            void     BT_resetUp ( void );                                   // ripristina lo stato del pulsante
+            void     BT_resetDown ( void );                                 // ripristina lo stato del pulsante
+            void     BT_resetLeft ( void );                                 // ripristina lo stato del tasto sinistro
+            void     BT_resetRight ( void );                                // ripristina lo stato del tasto destro
+            void     BT_resetQuit ( void );                                 // ripristina lo stato del pulsante di uscita
+
+            booleano BT_checkAny ( void );                                  // controlla se è stato premuto un pulsante qualsiasi
+            booleano BT_checkEnter ( void );                                // controlla il pulsante enter
+            booleano BT_checkUp ( void );                                   // controlla il pulsante
+            booleano BT_checkDown ( void );                                 // check down button
+            booleano BT_checkLeft ( void );                                 // controlla il pulsante sinistro
+            booleano BT_checkRight ( void );                                // controlla il pulsante destro
+            booleano BT_checkQuit ( void );                                 // controlla il pulsante di uscita
+
+            // mostra i metodi
+            void     DISP_update ( void );                                  // mostra il contenuto e aggiorna la struttura del menu
+            void     DISP_menuUpdate ( void );                              // mostra il contenuto ma non aggiorna la struttura del menu
+            void     DISP_clear ( void );                                   // chiama la funzione di callback per cancellare il display
+            booleano DISP_checkMenuUpdate ( void );                         // controlla se ci sono nuovi contenuti da visualizzare
+            booleano DISP_checkMenuCursorUpdate ( void );                   // controlla se il cursore è stato spostato
+            uint8_t  DISP_getMenuContentId ( uint8_t n);                    // ottiene l'id da un elemento di contenuto per una linea speciale
+
+            // metodi di funzione del menu
+            booleano FUNC_setup ( void );                                   // controlla se una funzione di menu è chiamata la prima volta per iniziare alcune cose
+            booleano FUNC_loop ( void );                                    // controlla se una funzione di menu è in esecuzione in un ciclo
+            booleano FUNC_close ( void );                                   // controlla se una funzione di menu è chiusa per raggiungere uno stato stabile
+            void     FUNC_goBackToMenu ( uint8_t e = 0 );                   // chiudi la funzione del menu corrente (il controllo FUNC_close è true quando è impostato)
+            uint8_t  FUNC_getID ( void );                                   // ottiene l'ID della funzione del menu corrente
+            void     FUNC_setLoopInterval ( unsigned  long  p_t );          // imposta un intervallo di loop per la funzione del menu corrente, l'intervallo di loop predefinito è 100000000 ms
+            void     FUNC_disableScreensaver ( void );                      // disabilita lo screensaver per la funzione del menu corrente  
+                  
+
+            // metodi del timer
+            booleano TIMER_ms ( unsigned  long e p_var, unsigned  long  p_t );  // un piccolo timer basato sulla funzione millis ()
+            void     TIMER_msReset ( unsigned  long e p_var);                   // resetta il timer millis
+            booleano TIMER_us ( unsigned  long & p_var, unsigned  long  p_t );  // un piccolo timer basato sulla funzione micros ()
+            void     TIMER_usReset ( unsigned  long e p_var);                   // ripristina il timer del micros
+
+            // altri metodi
+            void     OTHER_jumpToFunc (LCDML_FuncPtr_pu8 p_search, uint8_t p_para = 0 );    // jumpTo una funzione definita in base al nome della funzione
+            void     OTHER_jumpToID ( uint8_t p_search, uint8_t p_para = 0 );               // jumpTo una funzione definita basata sull'id della funzione
+            void     OTHER_setCursorToID ( uint8_t p_search);                               // imposta il cursore su una funzione definita in base all'ID
+            void     OTHER_setCursorToFunc (LCDML_FuncPtr_pu8 p_search);                    // imposta il cursore su una funzione definita in base al nome della funzione
+
+            // metodi di screensaver
+            void     SCREEN_enable (LCDML_FuncPtr_pu8 p_function, unsigned  long  p_t );        // abilita la funzione salvaschermo
+            void     SCREEN_disable ( void );                                                   // disabilita la funzione salvaschermo
+            void     SCREEN_resetTimer ( void );                                                // resetta il timer screensaver
+            void     SCREEN_start ( void );    
+            
+            
+            // Costruisce il menu con un nome e una funzione di uso NULL (fai attenzione a chiamarlo)
+            LCDMenuLib2_menu ( uint8_t p_id, uint8_t p_param, uint8_t p_configuration, LCDML_FuncPtr_pu8 p_callback_function, LCDML_FuncPtr_rb p_condition_function);
+
+            LCDML_FuncPtr_pu8 getCbFunction ();
+
+            void  addChild (LCDMenuLib2_menu & c);                      // Aggiunge il child c al menu.
+                                                                        // Se il menu ha già un figlio, chiedi al bambino di aggiungerlo come fratello
+            LCDMenuLib2_menu * getChild ( uint8_t which);               // Restituisce un puntatore al quale figlio di questo menu
+            LCDMenuLib2_menu * getSibling ( uint8_t howfar);            // Restituisce un puntatore al fratello quanto distanti i fratelli da questo menu
+            LCDMenuLib2_menu * getParent ();                            // Restituisce il menu principale di questo menu. Se nessun genitore, restituisce se stesso
+
+            uint8_t  getID ();                                          // restituisce l'id di un elemento del menu
+            boolean checkCondition ();                                  // controlla le condizioni di visualizzazione del menu
+            uint8_t  getParam ();                                       // restituisce un parametro che è impostato sull'inizializzazione
+            booleano checkType_menu ();
+            booleano checkType_dynParam ();
+
+            void callback ( uint8_t p);                                 // call call call del menu
+            boolean checkCallback ();                                   // controlla se callback può essere chiamato
+            
+            
+
+#######################################
+# LCDML
+#######################################
+
+LCDMenuLib2 KEYWORD1
+LCDMenuLib2_menu KEYWORD1
+
+LCDML                           KEYWORD3
+LCDBL                           KEYWORD3
+
+LCDML_0                         KEYWORD3
+LCDBL_0                         KEYWORD3
+
+
+#######################################
+# CONTROLLO / PULSANTI
+#######################################
+
+_LCDML_CONTROL_cfg                                      LITERAL1
+
+_LCDML_DISP_cfg_scrollbar                               LITERAL1
+
+_LCDML_VERSION                                          LITERAL1
+
+_LCDML_CONTROL_serial_enter                             LITERAL1
+_LCDML_CONTROL_serial_up                                LITERAL1
+_LCDML_CONTROL_serial_down                              LITERAL1
+_LCDML_CONTROL_serial_left                              LITERAL1
+_LCDML_CONTROL_serial_right                             LITERAL1
+_LCDML_CONTROL_serial_quit                              LITERAL1
+
+_LCDML_CONTROL_analog_pin                               LITERAL1
+_LCDML_CONTROL_analog_enter_min                         LITERAL1
+_LCDML_CONTROL_analog_enter_max                         LITERAL1
+_LCDML_CONTROL_analog_up_min                            LITERAL1
+_LCDML_CONTROL_analog_up_max                            LITERAL1
+_LCDML_CONTROL_analog_down_min                          LITERAL1
+_LCDML_CONTROL_analog_down_max                          LITERAL1
+_LCDML_CONTROL_analog_enable_quit                       LITERAL1
+_LCDML_CONTROL_analog_back_min                          LITERAL1
+_LCDML_CONTROL_analog_back_max                          LITERAL1
+_LCDML_CONTROL_analog_enable_lr                         LITERAL1
+_LCDML_CONTROL_analog_left_min                          LITERAL1
+_LCDML_CONTROL_analog_left_max                          LITERAL1
+_LCDML_CONTROL_analog_right_min                         LITERAL1
+_LCDML_CONTROL_analog_right_max                         LITERAL1
+
+_LCDML_CONTROL_digital_low_active                       LITERAL1
+_LCDML_CONTROL_digital_a                                LITERAL1
+_LCDML_CONTROL_digital_enable_quit                      LITERAL1
+_LCDML_CONTROL_digital_enable_lr                        LITERAL1
+_LCDML_CONTROL_digital_enter                            LITERAL1
+_LCDML_CONTROL_digital_up                               LITERAL1
+_LCDML_CONTROL_digital_down                             LITERAL1
+_LCDML_CONTROL_digital_quit                             LITERAL1
+_LCDML_CONTROL_digital_left                             LITERAL1
+_LCDML_CONTROL_digital_right                            LITERAL1
+
+_LCDML_CONTROL_encoder_enable                           LITERAL1
+_LCDML_CONTROL_encoder_pin_a                            LITERAL1
+_LCDML_CONTROL_encoder_pin_b                            LITERAL1
+_LCDML_CONTROL_encoder_pin_button                       LITERAL1
+_LCDML_CONTROL_encoder_high_active                      LITERAL1
+
+_LCDML_CONTROL_keypad_rows                              LITERAL1
+_LCDML_CONTROL_keypad_cols                              LITERAL1
+
+
+_LCDML_u8g_lcd_w                            LITERAL1
+_LCDML_u8g_lcd_h                            LITERAL1
+_LCDML_u8g_font                             LITERAL1
+_LCDML_u8g_font_w                           LITERAL1
+_LCDML_u8g_font_h                           LITERAL1
+_LCDML_u8g_cols_max                         LITERAL1
+_LCDML_u8g_rows_max                         LITERAL1
+_LCDML_u8g_rows                             LITERAL1
+_LCDML_u8g_cols                             LITERAL1
+_LCDML_u8g_scrollbar_w                      LITERAL1
+
+
+_LCDML_DISP_w                               LITERAL1
+_LCDML_DISP_h                               LITERAL1
+_LCDML_DISP_font                            LITERAL1
+_LCDML_DISP_font_w                          LITERAL1
+_LCDML_DISP_font_h                          LITERAL1
+_LCDML_DISP_cursor_char                     LITERAL1
+_LCDML_DISP_cur_space_before                LITERAL1
+_LCDML_DISP_cur_space_behind                LITERAL1
+_LCDML_DISP_box_x0                          LITERAL1
+_LCDML_DISP_box_y0                          LITERAL1
+_LCDML_DISP_box_x1                          LITERAL1
+_LCDML_DISP_box_y1                          LITERAL1
+_LCDML_DISP_draw_frame                      LITERAL1
+_LCDML_DISP_scrollbar_w                     LITERAL1
+_LCDML_DISP_cols_max                        LITERAL1
+_LCDML_DISP_rows_max                        LITERAL1
+
+
+_LCDML_DISP_cols                            LITERAL1
+_LCDML_DISP_rows                            LITERAL1
+_LCDML_DISP_rs                              LITERAL1
+_LCDML_DISP_e                               LITERAL1
+_LCDML_DISP_rw                              LITERAL1
+_LCDML_DISP_dat0                            LITERAL1
+_LCDML_DISP_dat1                            LITERAL1
+_LCDML_DISP_dat2                            LITERAL1
+_LCDML_DISP_dat3                            LITERAL1
+_LCDML_DISP_dat4                            LITERAL1
+_LCDML_DISP_dat5                            LITERAL1
+_LCDML_DISP_dat6                            LITERAL1
+_LCDML_DISP_dat7                            LITERAL1
+_LCDML_DISP_backlight                       LITERAL1
+_LCDML_DISP_backlight_pol                   LITERAL1
+_LCDML_DISP_addr                            LITERAL1
+_LCDML_DISP_srdata                          LITERAL1
+_LCDML_DISP_srclk                           LITERAL1
+_LCDML_DISP_strobe                          LITERAL1
+_LCDML_DISP_enable                          LITERAL1
+_LCDML_DogLCD_type                          LITERAL1
+_LCDML_DogLCD_SI                            LITERAL1
+_LCDML_DogLCD_CLK                           LITERAL1
+_LCDML_DogLCD_RS                            LITERAL1
+_LCDML_DogLCD_CSB                           LITERAL1
+_LCDML_DogLCD_RESET                         LITERAL1
+_LCDML_DogLCD_LIGHT                         LITERAL1
+
+_LCDML_DISP_cfg_control                     LITERAL1
+
+_LCDML_DISP_cfg_cursor                      LITERAL1
+
+_LCDML_DISP_cnt                             LITERAL1
+
+_LCDML_TYPE_dynParam                        LITERAL1
+_LCDML_TYPE_default                         LITERAL1
+
+
+#######################################
+# MENU
+#######################################
+
+getChild                            KEYWORD2
+getParam                            KEYWORD2
+checkCallback                       KEYWORD2
+getID                               KEYWORD2
+getSibling                          KEYWORD2
+callback                            KEYWORD2
+checkCondition                      KEYWORD2
+checkType_menu                      KEYWORD2
+checkType_dynParam                  KEYWORD2
+
+
+#######################################
+# DISPLAY / MENU
+#######################################
+
+# metodi di classe
+init                                KEYWORD2
+loop_menu                           KEYWORD2
+loop_control                        KEYWORD2
+
+MENU_display                        KEYWORD2
+MENU_goRoot                         KEYWORD2
+MENU_goBack                         KEYWORD2
+MENU_getLayer                       KEYWORD2
+MENU_getCursorPos                   KEYWORD2
+MENU_getChilds                      KEYWORD2
+MENU_getCursorPosAbs                KEYWORD2
+MENU_getParentID                    KEYWORD2
+MENU_enRollover                     KEYWORD2
+MENU_disRollover                    KEYWORD2
+MENU_getDisplayedObj                KEYWORD2
+MENU_getCurrentObj                  KEYWORD2
+MENU_getScroll                      KEYWORD2
+MENU_enScroll                       KEYWORD2
+MENU_disScroll                      KEYWORD2
+MENU_getScrollDisableStatus         KEYWORD2
+MENU_setDynContent                  KEYWORD2
+MENU_checkDynContent                KEYWORD2
+
+BT_setup                            KEYWORD2
+BT_enter                            KEYWORD2
+BT_up                               KEYWORD2
+BT_down                             KEYWORD2
+BT_left                             KEYWORD2
+BT_right                            KEYWORD2
+BT_quit                             KEYWORD2
+
+BT_checkAll                         KEYWORD2
+BT_checkAny                         KEYWORD2
+BT_checkLeft                        KEYWORD2
+BT_checkRight                       KEYWORD2
+BT_checkUp                          KEYWORD2
+BT_checkDown                        KEYWORD2
+BT_checkEnter                       KEYWORD2
+
+BT_resetAll                         KEYWORD2
+BT_resetEnter                       KEYWORD2
+BT_resetLeft                        KEYWORD2
+BT_resetRight                       KEYWORD2
+BT_resetUp                          KEYWORD2
+BT_resetDown                        KEYWORD2
+
+DISP_update                         KEYWORD2
+DISP_menuUpdate                     KEYWORD2
+DISP_clear                          KEYWORD2
+DISP_checkMenuUpdate                KEYWORD2
+DISP_checkMenuCursorUpdate          KEYWORD2
+DISP_getMenuContentId               KEYWORD2
+
+FUNC_setup                          KEYWORD2
+FUNC_loop                           KEYWORD2
+FUNC_close                          KEYWORD2
+FUNC_goBackToMenu                   KEYWORD2
+FUNC_getID                          KEYWORD2
+FUNC_setLoopInterval                KEYWORD2
+FUNC_disableScreensaver             KEYWORD2
+
+OTHER_jumpToFunc                    KEYWORD2
+OTHER_jumpToID                      KEYWORD2
+OTHER_setCursorToFunc               KEYWORD2
+OTHER_setCursorToID                 KEYWORD2
+
+TIMER_ms                            KEYWORD2
+TIMER_msReset                       KEYWORD2
+TIMER_us                            KEYWORD2
+TIMER_usReset                       KEYWORD2
+
+SCREEN_enable                       KEYWORD2
+SCREEN_disable                      KEYWORD2
+SCREEN_resetTimer                   KEYWORD2
+SCREEN_start                        KEYWORD2
+
+
+#######################################
+# MACROS
+#######################################
+
+LCDML_getContent                    KEYWORD2
+LCDML_createMenu                    KEYWORD2
+LCDML_getElementName                KEYWORD2
+LCDML_getCustomElementName          KEYWORD2
+LCDML_add                           KEYWORD2
+LCDML_addAdvanced                   KEYWORD2
+LCDML_setup                         KEYWORD2
+
+LCDML_createCustomLang              KEYWORD2
+LCDML_getCustomContent              KEYWORD2
+LCDML_langDef                       KEYWORD2
